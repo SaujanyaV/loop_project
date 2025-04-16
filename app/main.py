@@ -206,30 +206,3 @@ async def chat_endpoint(
     except Exception as e:
         logger.error(f"Unhandled error during graph invocation or response handling for session {session_id}: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"An unexpected server error occurred.")
-
-
-@app.post("/clear", response_model=ClearResponse)
-async def clear_session(session_id: Optional[str] = Form(None)):
-    """
-    Signals that the context for a given session ID should be considered cleared.
-    The actual clearing happens when the client starts sending requests
-    with a NEW session_id. This endpoint primarily serves as a signal/confirmation.
-    It does NOT modify the backend memory state directly.
-    """
-    if session_id:
-        logger.info(f"Clear request received for session_id: {session_id}. Client should generate a new ID for future requests.")
-        message = f"Session {session_id} context clear signaled. Please use a new session_id for the next chat message to start fresh."
-        return ClearResponse(message=message, session_id=session_id)
-    else:
-        logger.info("Clear request received without a specific session_id. Client should generate a new ID for future requests.")
-        message = "Context clear signaled. Please use a new session_id for the next chat message to start fresh."
-        return ClearResponse(message=message)
-
-# --- Main Execution Block (as before) ---
-if __name__ == "__main__":
-    from dotenv import load_dotenv
-    load_dotenv()
-    if not settings.OPENAI_API_KEY or "YOUR_DEFAULT_KEY_HERE" in settings.OPENAI_API_KEY:
-         print("\n!!! WARNING: OpenAI API Key is missing or default. !!!\n")
-    # Use reload=True only for development
-    uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True)
