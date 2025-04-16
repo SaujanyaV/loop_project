@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Environment
+.venv/
+.env
+
+# Docker-related
+Dockerfile
+.dockerignore
+
+# Git
+.git
+.gitignore
+
+# VS Code settings
+.vscode/
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
